@@ -41,7 +41,7 @@ const Body = () => {
     <>
       <HeadBod />
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mt-8">
+        <div className="flex flex-col items-center mt-8 space-y-4">
           {/* Search Bar */}
           <div className="flex items-center space-x-4">
             <input
@@ -63,22 +63,18 @@ const Body = () => {
               Search
             </button>
           </div>
-          {/* Top Rated Filter Button */}
+          
           <button
-            className="px-6 py-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition mt-8"
+            className="px-6 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition"
             onClick={() => {
               const filterList = listOfRestaurants.filter(
                 (res) => res.info.avgRating > 4.5
               );
               setFilteredRestaurant(filterList);
-            }}
-            style={{position:"relative",bottom:"1rem"}}
-          >
-            Top Rated Restaurants
-          </button>
+            }}>
+               Top Rated Restaurants
+               </button>
         </div>
-
-        {/* Restaurant Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
           {filteredRestaurant.map((restaurant) => (
             <Link

@@ -204,7 +204,7 @@ const Header = ({ showAlert }) => {
                   onClick={handleLogout}
                   style={{
                     marginRight: "1rem",
-                    color: "#06395a",
+                    color: "white",
                     fontWeight: "bold",
                   }}
                 >
