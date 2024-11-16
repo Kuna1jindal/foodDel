@@ -8,6 +8,7 @@ const HeadBod = () => {
         className="w-full h-[600px] object-cover"
         src={IMG_URL}
         alt="hb-img"
+        loading="eager"
       />
       
       {/* Overlay with Text */}

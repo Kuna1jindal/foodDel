@@ -36,7 +36,7 @@ const Cart = ({ showAlert }) => {
         showAlert("PLease Log in first", "warning");
         console.error("Fetch error:", error);
       });
-  }, []); // Adding the empty array to run only on mount
+  }, []); 
 
   const handleClearCart = async () => {
     setCart([]);
@@ -77,7 +77,7 @@ const Cart = ({ showAlert }) => {
           </h1>
         )}
         {cart.map((item) => (
-          <CartList key={item._id} item={item} />
+          <CartList key={item._id} item={item} showAlert={showAlert} items={cart} setItems={setCart} price={totalPrice} setPrice={setTotalPrice}/>
         ))}
 
         {/* Display Total Price */}

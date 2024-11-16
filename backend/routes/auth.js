@@ -111,7 +111,6 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(404).json({ error:errors.array()});
       }
-      console.log(req.body);
       const { email, password } = req.body;
       let user = await User.findOne({ email: email });
       if (!user) {

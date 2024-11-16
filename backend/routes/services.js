@@ -32,13 +32,23 @@ router.get('/showcart',fetchuser,async(req,res)=>{
     })
 
 });
-router.delete('/deleteitem',async(req,res)=>{
-Cart.deleteOne({_id:req.body.id})
-.then(()=>{
-    res.status(200).json({message:"Data item successfully updated"+req.body.id});
-})
-.catch(()=>{console.log('some error occured')})
-});
+router.delete('/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const itemData=await Cart.findOne({_id:id});
+      const result = await Cart.deleteOne({ _id: id });
+  
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: 'Item not found' });
+      }
+  
+      res.status(200).json({ message: 'Data item successfully deleted',itemData:itemData });
+    } catch (error) {
+      console.error(error); // Log the error for debugging
+      res.status(500).json({ error: 'Server Error' });
+    }
+  });
+  
 router.delete('/deleteall', fetchuser, async (req, res) => {
     try {
       // Attempt to delete all cart items for the user
