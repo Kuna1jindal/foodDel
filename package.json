@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
+    "axios": "^1.7.7",
     "mongoose": "^8.8.1",
     "nodemon": "^3.1.7",
     "prop-types": "^15.8.1",

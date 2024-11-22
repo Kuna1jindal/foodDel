@@ -15,11 +15,6 @@ const RestaurantMenu = ({showAlert}) => {
     console.log("running");
     return <Shimmer_menu />;
   }
-
-  const { name, price, description } = resInfo;
-
-  const { itemCards } = resInfo;
-
   const categories = resInfo.filter(
     (c) =>
       c?.card?.card?.["@type"] ===

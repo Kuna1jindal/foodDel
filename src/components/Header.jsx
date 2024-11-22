@@ -8,17 +8,21 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const Header = ({ showAlert }) => {
+
   const cartcontext = useContext(CartContext);
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  
+
   // Check if the user is logged in based on the presence of authtoken
   const isLoggedIn = Boolean(localStorage.getItem("authtoken"));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const dismissButton = document.querySelector(
+      '#loginModal .btn-close[data-bs-dismiss="modal"]'
+    );
+    dismissButton.click();
     const response = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
       headers: {
@@ -31,10 +35,12 @@ const Header = ({ showAlert }) => {
       const token = await response.json();
       localStorage.setItem("authtoken", token.authtoken);
       showAlert(token.message, "success");
+
       navigate("/");
     } else {
       const data = await response.json();
-      showAlert(data.error, "warning");
+
+      showAlert(data.error[0], "info");
     }
   };
 
@@ -52,7 +58,6 @@ const Header = ({ showAlert }) => {
       showAlert("Logout cancelled", "warning");
     }
   };
-  
 
   return (
     <div>
@@ -73,7 +78,7 @@ const Header = ({ showAlert }) => {
             </h2>
           </Link>
         </div>
-        
+
         <div className="items-center">
           <ul
             className="flex justify-between py-12 items-center"
@@ -85,30 +90,30 @@ const Header = ({ showAlert }) => {
             </li>
 
             <li className="font-bold px-4 p-2 font-poppins text-xl rounded-xl transition ease-in-out duration-300 transform">
-  {!isLoggedIn ? (
-    <button
-      type="button"
-      className="cursor-not-allowed opacity-50"
-      onClick={() => {
-        // Log the alert message to check if it's being called
-        console.log("Please login to access the cart");
-        showAlert("Please login to access the cart", "warning");
-      }}
-    >
-      <img src={cartIcon} alt="Cart" />
-      <span className="position-absolute top-2 end-1 translate-middle badge rounded-pill bg-warning">
-        {cartcontext.count}
-      </span>
-    </button>
-  ) : (
-    <Link to="/cart">
-      <img src={cartIcon} alt="Cart" />
-      <span className="position-absolute top-2 end-1 translate-middle badge rounded-pill bg-warning">
-        {cartcontext.count}
-      </span>
-    </Link>
-  )}
-</li>
+              {!isLoggedIn ? (
+                <button
+                  type="button"
+                  className="cursor-not-allowed opacity-50"
+                  onClick={() => {
+                    // Log the alert message to check if it's being called
+                    console.log("Please login to access the cart");
+                    showAlert("Please login to access the cart", "warning");
+                  }}
+                >
+                  <img src={cartIcon} alt="Cart" />
+                  <span className="position-absolute top-2 end-1 translate-middle badge rounded-pill bg-warning">
+                    {cartcontext.count}
+                  </span>
+                </button>
+              ) : (
+                <Link to="/cart">
+                  <img src={cartIcon} alt="Cart" />
+                  <span className="position-absolute top-2 end-1 translate-middle badge rounded-pill bg-warning">
+                    {cartcontext.count}
+                  </span>
+                </Link>
+              )}
+            </li>
             {/* Login or Logout Button */}
             <li>
               {!isLoggedIn ? (
@@ -178,6 +183,20 @@ const Header = ({ showAlert }) => {
                             </div>
                           </div>
                           <div className="modal-footer">
+                            <Link to="/signup" data-bs-dismiss="modal">
+                              <button
+                                data-bs-dismiss="modal"
+                                style={{
+                                  position: "relative",
+                                  left: "-8rem",
+                                  textDecoration: "underline",
+                                  color: "blue",
+                                }}
+                              >
+                                Don`t have a account Signup
+                              </button>
+                            </Link>
+
                             <button
                               type="button"
                               className="btn btn-secondary"
@@ -188,7 +207,6 @@ const Header = ({ showAlert }) => {
                             <button
                               type="submit"
                               className="btn btn-primary"
-                              data-bs-dismiss="modal"
                             >
                               Login
                             </button>

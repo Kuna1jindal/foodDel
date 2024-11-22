@@ -9,7 +9,8 @@ const UserSchema = new Schema({
   state: { type: String, required: true },
   city: { type: String, required: true },
   street: { type: String, required: true },
-  hno: { type: Number, required: true }
+  hno: { type:String, required: true },
+  pincode:{type:String}
 });
 
 // Define and export the model

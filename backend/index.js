@@ -8,6 +8,7 @@ connectToMongo();
 import authRoutes from './routes/auth.js';
 import restRoutes from './routes/restaurent.js';
 import services from './routes/services.js';
+import payment from './routes/payment.js';
 
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
@@ -17,12 +18,14 @@ app.use(cors(
 methods:["GET","POST","PUT","DELETE"],
 allowedHeaders: ['Content-Type','authtoken']
 }));
-app.get('/', (req, res) =>{
-   res.send('THIS IS CONTENT')
-  });
+  app.get('/',async(req,res)=>{
+    res.send('Food Delivery App is Working!');
+  })
   app.use("/api/auth",authRoutes);
   app.use("/api/services",services);
   app.use("/api/restaurant",restRoutes);
+  app.use("/api/payment",payment);
+
   app.listen(port,()=>{
     console.log(`Listening at http://localhost:${port}`);
 })

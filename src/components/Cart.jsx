@@ -2,8 +2,10 @@ import CartList from "./CartList.jsx";
 import { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { CartContext } from "../utils/cartLength.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Cart = ({ showAlert }) => {
+  const navigate=useNavigate();
   const counterState = useContext(CartContext);
   const [cart, setCart] = useState([]); // useState to store cart data
   const [totalPrice, setTotalPrice] = useState(0); // State to store total price
@@ -33,7 +35,7 @@ const Cart = ({ showAlert }) => {
       })
       .catch((error) => {
         // console.log(response.status);
-        showAlert("PLease Log in first", "warning");
+        showAlert("PLease Log in first", "info");
         console.error("Fetch error:", error);
       });
   }, []); 
@@ -63,7 +65,8 @@ const Cart = ({ showAlert }) => {
   };
 
   const handleProceedToCheckout = () => {
-    // Logic for proceeding to checkout
+    navigate('/checkout');
+    
     showAlert("Proceeding to checkout", "success");
   };
 
