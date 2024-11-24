@@ -1,13 +1,11 @@
 import LOGO_URL from "../assets/image-logo.jpeg";
 import { Link } from "react-router-dom";
-import cartIcon from "../assets/icons8-cart-48.png";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import { useState, useContext } from "react";
 import { CartContext } from "../utils/cartLength";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import userImg from "../assets/user.png";
-import home from "../assets/home1.png";
+import { FaHome, FaShoppingCart, FaUser } from 'react-icons/fa';
 
 const Header = ({ showAlert }) => {
   const cartcontext = useContext(CartContext);
@@ -86,14 +84,11 @@ const Header = ({ showAlert }) => {
             style={{ position: "relative", bottom: "1rem" }}
           >
             <li className="px-4 p-2">{useOnlineStatus() ? "🟢" : "🔴"}</li>
-            <li className="font-bold px-3 p-2 font-poppins text-xl rounded-xl  hover:text-blue-900 transition ease-in-out duration-300 transform">
+            <li className="position-relative start-6 font-bold px-3 p-2 font-poppins text-xl rounded-xl  hover:text-blue-900 transition ease-in-out duration-300 transform">
               <Link to="/">
                 {" "}
-                <img
-                  src={home}
-                  alt="Home button"
-                  style={{ height: "3rem", width: "3rem" }}
-                />{" "}
+                <FaHome className="me-4" size={40} />
+                {" "}
               </Link>
             </li>
 
@@ -109,33 +104,17 @@ const Header = ({ showAlert }) => {
                     showAlert("Please login to access the cart", "warning");
                   }}
                 >
-                  <img
-                    src={cartIcon}
-                    alt="Cart"
-                    style={{
-                      height: "3rem",
-                      width: "3rem",
-                      position: "relative",
-                      left: "-1.6rem",
-                    }}
-                  />
-                  <span className="position-absolute top-2 end-3 translate-middle badge rounded-pill bg-warning">
+                  <FaShoppingCart className="me-10" size={40} />
+                  
+                  <span className="position-absolute top-2 end-7 translate-middle badge rounded-pill bg-warning">
                     {cartcontext.count}
                   </span>
                 </button>
               ) : (
                 <Link to="/cart">
-                  <img
-                    src={cartIcon}
-                    alt="Cart"
-                    style={{
-                      height: "3rem",
-                      width: "3rem",
-                      position: "relative",
-                      left: "-1.6rem",
-                    }}
-                  />
-                  <span className="position-absolute top-2 end-3 translate-middle badge rounded-pill bg-warning">
+                  <FaShoppingCart className="me-10" size={40} />
+                 
+                  <span className="position-absolute top-2 end-7 translate-middle badge rounded-pill bg-warning">
                     {cartcontext.count}
                   </span>
                 </Link>
@@ -157,11 +136,7 @@ const Header = ({ showAlert }) => {
                       fontWeight: "bold",
                     }}
                   >
-                    <img
-                      src={userImg}
-                      alt="UserImage"
-                      style={{ height: "2.7rem", width: "3rem" }}
-                    />
+                     <FaUser className="me-4 mt-2" size={35} />
                     Login
                   </div>
 
@@ -258,11 +233,7 @@ const Header = ({ showAlert }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <img
-                    src={userImg}
-                    alt="User"
-                    style={{ height: "2.7rem", width: "3rem" }}
-                  />
+                  <FaUser className="me-4 mt-2" size={35}></FaUser>
                   Logout
                 </div>
               )}
