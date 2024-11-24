@@ -1,59 +1,57 @@
 import express from 'express';
 import { Buffer } from 'buffer';
-import axios from 'axios';
 import crypto from 'crypto';
+import axios from 'axios';
 
-const phone_pe_Host_url = 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
+
+const phone_pe_Host_url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
 const router = express.Router();
-const salt_key = '96434309-7796-489d-8924-ab56988a6076';
-// const salt_key='099eb0cd-02cf-4e2a-8aca-3e6c6aff0399';
-const merchant_id = 'PGTESTPAYUAT86';
-// const merchant_id = 'PGTESTPAYUAT';
+const salt_key = "96434309-7796-489d-8924-ab56988a6076";
+const merchant_id = "PGTESTPAYUAT86";
 
-router.post('/test', async (req, res) => {
-  res.status(200).json({ message: "Server is Working..." });
+router.get('/test', async (req, res) => {
+  res.redirect('http://localhost:5173/confirm');
 });
 
 router.post('/order', async (req, res) => {
-  const { name, amount, mobile, MUId, transactionId } = req.body;
-  const data = {
-    "merchantId": merchant_id,
-    "merchantTransactionId": transactionId,
-    "merchantUserId": MUId,
-    "amount": amount * 100,  // Convert to paise
-    "name": name,
-    "redirectUrl": `http://localhost:5000/api/payment/status?id=${transactionId}`,
-    "redirectMode": "Post",
-    "mobileNumber": mobile,
-    "paymentInstrument": {
-      "type": "PAY_PAGE"
-    }
-  };
+  
+    const { name, amount, mobile, MUId, transactionId } = req.body;
+    const data = {
+      merchantId: merchant_id,
+      merchantTransactionId: transactionId,
+      merchantUserId: MUId,
+      amount: amount * 100,
+      name,
+      redirectUrl: `http://localhost:5000/api/payment/status?id=${transactionId}`,
+      redirectMode: "POST",
+      mobileNumber: mobile,
+      paymentInstrument: { type: "PAY_PAGE" },
+    };
 
-  const keyIndex = 1;
-  const payload = JSON.stringify(data);
-  const payloadMain = Buffer.from(payload).toString('base64');
-  const str = payloadMain + "/pg/v1/pay" + salt_key;
-  const sha256 = crypto.createHash('sha256').update(str).digest('hex');
-  const checksum = sha256 + '###' + keyIndex;
+    const payload = JSON.stringify(data);
+    const payloadMain = Buffer.from(payload).toString('base64');
+    const str = payloadMain + "/pg/v1/pay" + salt_key;
+    const sha256 = crypto.createHash('sha256').update(str).digest('hex');
+    const checksum = sha256 + "###1";
 
-  try {
-    const response = await axios(phone_pe_Host_url, {
-      method: "POST",
+     await axios( {
+
+      method: 'POST',
+      url:phone_pe_Host_url,
       headers: {
-        "accept": 'application/json',
-        "Content-Type": "application/json",
-        "X-VERIFY": checksum
+        'Content-Type': 'application/json',
+        'X-VERIFY': checksum,
       },
       data: {
-        request: payloadMain
-      }
-    });
-    res.status(200).json(response.data);
-  } catch (error) {
-    console.log(error.message);
+        request:payloadMain
+      },
+    }).then(response=>{
+      res.status(200).json(response.data);
+    })
+  .catch (error=>{
+    console.error('Error in /order:', error);
     res.status(500).json({ error: error.message });
-  }
+  })
 });
 
 // Status route
@@ -65,26 +63,26 @@ router.post("/status", async (req, res) => {
   const sha256 = crypto.createHash('sha256').update(string).digest('hex');
   const checksum = sha256 + "###" + keyIndex;
 
-  const options = {
-    method: 'GET',
-    url: `https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/${merchantId}/${merchantTransactionId}`,
-    headers: {
-      accept: 'application/json',
-      'Content-Type': 'application/json',
-      'X-VERIFY': checksum,
-      'X-MERCHANT-ID': `${merchantId}`
-    }
-  };
-
   try {
-    const response = await axios.request(options);
-    if (response.data.success === true) {
-      const url = `http://localhost:5173/confirm`;
-      return res.redirect(url);
-    } else {
-      const url = `http://localhost:5173/error`;
-      return res.redirect(url);
-    }
+     await axios(
+      {
+        method: 'GET',
+        url:`https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/${merchantId}/${merchantTransactionId}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-VERIFY': checksum,
+          'X-MERCHANT-ID': `${merchantId}`,
+        },
+      }
+    )
+    .then(response=>{
+      console.log(response);
+      if(response.data.success){
+        res.redirect('http://localhost:5173/confirm');
+      }else{
+        res.redirect('http://localhost:5173/error');
+      }
+    })
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

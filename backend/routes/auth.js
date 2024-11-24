@@ -87,7 +87,7 @@ router.post(
           res.status(201).json({success:success,authtoken:authtoken,message:"Logged in Successfully"});
       } else {
         success=false;
-        return res.status(400).json({ success,error: "Enter correct password credentials" });
+        return res.status(400).json({ success,error: "Enter correct password!" });
       }
     } catch (error) {
       res.status(500).send("Internel server error!"+error);

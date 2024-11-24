@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 
 const Checkout = () => {
   const [payment, setPayment] = useState("");
@@ -72,46 +71,51 @@ const Checkout = () => {
     fetchCartData();
   }, [navigate]);
 
-  const handlePayment = async() => {
+  const handlePayment = async () => {
     if (payment !== "UPI") {
       navigate("/confirm");
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Start loading spinner
 
-    const url = "http://localhost:5000/api/payment/order";
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: userData.name,
-        mobile: userData.phone,
-        amount: amount,
-        MUId: `Mws${Date.now()}`,
-        transactionId: "Tes"+Date.now(),
-      }),
-    };
+    try {
+      const url = "http://localhost:5000/api/payment/order";
 
-    axios(url, options)
-      .then((response) => {
-        if (!response.ok) throw new Error("Payment failed");
-        return response.json();
-      })
-      .then((data) => {
-        if(data.data && data.data.instrumentResponse.
-          redirectInfo.url){
-            window.location.href=data.data.instrumentResponse.redirectInfo.url;
-          }
-        console.log("Payment successful:", data);
-      })
-      .catch((error) => {
-        console.error("Payment error:", error);
-        setError("Payment failed. Please try again.");
-      })
-      .finally(() => setLoading(false));
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userData.name,
+          mobile: userData.phone,
+          amount: amount,
+          MUId: `MES`+Date.now(),
+          transactionId: "TES" +Date.now(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Payment request failed");
+      }
+
+      const data = await response.json();
+
+      const redirectUrl = data?.data?.instrumentResponse?.redirectInfo?.url;
+     
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl; // Redirect to payment page
+      } else {
+        throw new Error("Invalid redirection URL");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      setError("Payment failed. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading spinner
+    }
   };
 
   if (error) {
@@ -124,13 +128,15 @@ const Checkout = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center text-success my-4" style={{fontSize:"3rem"}}>
+      <h1
+        className="text-center text-success my-4"
+        style={{ fontSize: "3rem" }}
+      >
         <strong>Checkout</strong>
       </h1>
 
       <div className="row">
         <div className="col-md-7">
-          {/* Address Section */}
           <div className="card mb-4">
             <div className="card-header">Address</div>
             <div className="card-body">
@@ -150,7 +156,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Payment Section */}
           <div className="card">
             <div className="card-header">Select a payment method</div>
             <div className="card-body">
@@ -185,7 +190,6 @@ const Checkout = () => {
         </div>
 
         <div className="col-md-5">
-          {/* Order Summary Section */}
           <div className="card">
             <div className="card-header">Order Summary</div>
             <div className="card-body">

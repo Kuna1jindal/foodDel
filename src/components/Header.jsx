@@ -6,9 +6,10 @@ import { useState, useContext } from "react";
 import { CartContext } from "../utils/cartLength";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import userImg from "../assets/user.png";
+import home from "../assets/home1.png";
 
 const Header = ({ showAlert }) => {
-
   const cartcontext = useContext(CartContext);
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
@@ -40,7 +41,7 @@ const Header = ({ showAlert }) => {
     } else {
       const data = await response.json();
 
-      showAlert(data.error[0], "info");
+      showAlert(data.error, "info");
     }
   };
 
@@ -85,8 +86,15 @@ const Header = ({ showAlert }) => {
             style={{ position: "relative", bottom: "1rem" }}
           >
             <li className="px-4 p-2">{useOnlineStatus() ? "🟢" : "🔴"}</li>
-            <li className="font-bold px-4 p-2 font-poppins text-xl rounded-xl hover:bg-slate-300 hover:text-blue-900 hover:scale-95 transition ease-in-out duration-300 transform">
-              <Link to="/"> HOME</Link>
+            <li className="font-bold px-3 p-2 font-poppins text-xl rounded-xl  hover:text-blue-900 transition ease-in-out duration-300 transform">
+              <Link to="/">
+                {" "}
+                <img
+                  src={home}
+                  alt="Home button"
+                  style={{ height: "3rem", width: "3rem" }}
+                />{" "}
+              </Link>
             </li>
 
             <li className="font-bold px-4 p-2 font-poppins text-xl rounded-xl transition ease-in-out duration-300 transform">
@@ -94,21 +102,40 @@ const Header = ({ showAlert }) => {
                 <button
                   type="button"
                   className="cursor-not-allowed opacity-50"
+                  style={{ marginRight: "" }}
                   onClick={() => {
                     // Log the alert message to check if it's being called
                     console.log("Please login to access the cart");
                     showAlert("Please login to access the cart", "warning");
                   }}
                 >
-                  <img src={cartIcon} alt="Cart" />
-                  <span className="position-absolute top-2 end-1 translate-middle badge rounded-pill bg-warning">
+                  <img
+                    src={cartIcon}
+                    alt="Cart"
+                    style={{
+                      height: "3rem",
+                      width: "3rem",
+                      position: "relative",
+                      left: "-1.6rem",
+                    }}
+                  />
+                  <span className="position-absolute top-2 end-3 translate-middle badge rounded-pill bg-warning">
                     {cartcontext.count}
                   </span>
                 </button>
               ) : (
                 <Link to="/cart">
-                  <img src={cartIcon} alt="Cart" />
-                  <span className="position-absolute top-2 end-1 translate-middle badge rounded-pill bg-warning">
+                  <img
+                    src={cartIcon}
+                    alt="Cart"
+                    style={{
+                      height: "3rem",
+                      width: "3rem",
+                      position: "relative",
+                      left: "-1.6rem",
+                    }}
+                  />
+                  <span className="position-absolute top-2 end-3 translate-middle badge rounded-pill bg-warning">
                     {cartcontext.count}
                   </span>
                 </Link>
@@ -118,19 +145,25 @@ const Header = ({ showAlert }) => {
             <li>
               {!isLoggedIn ? (
                 <>
-                  <button
-                    type="button"
-                    className="btn btn-warning"
+                  <div
                     data-bs-toggle="modal"
                     data-bs-target="#loginModal"
                     style={{
-                      marginRight: "1rem",
+                      textAlign: "center",
+                      position: "relative",
+                      top: "-0.3rem",
+                      right: "1rem",
                       color: "#06395a",
                       fontWeight: "bold",
                     }}
                   >
+                    <img
+                      src={userImg}
+                      alt="UserImage"
+                      style={{ height: "2.7rem", width: "3rem" }}
+                    />
                     Login
-                  </button>
+                  </div>
 
                   {/* Login Modal */}
                   <div
@@ -204,10 +237,7 @@ const Header = ({ showAlert }) => {
                             >
                               Close
                             </button>
-                            <button
-                              type="submit"
-                              className="btn btn-primary"
-                            >
+                            <button type="submit" className="btn btn-primary">
                               Login
                             </button>
                           </div>
@@ -217,17 +247,24 @@ const Header = ({ showAlert }) => {
                   </div>
                 </>
               ) : (
-                <button
-                  className="btn btn-danger"
+                <div
                   onClick={handleLogout}
                   style={{
-                    marginRight: "1rem",
-                    color: "white",
+                    textAlign: "center",
+                    position: "relative",
+                    top: "-0.3rem",
+                    right: "1rem",
+                    color: "#06395a",
                     fontWeight: "bold",
                   }}
                 >
+                  <img
+                    src={userImg}
+                    alt="User"
+                    style={{ height: "2.7rem", width: "3rem" }}
+                  />
                   Logout
-                </button>
+                </div>
               )}
             </li>
           </ul>

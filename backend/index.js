@@ -13,11 +13,11 @@ import payment from './routes/payment.js';
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
 // Applying cors_policy allowing 5000 server to access 5173 port server 
-app.use(cors(
-  {origin:`http://localhost:${5173}`,
-methods:["GET","POST","PUT","DELETE"],
-allowedHeaders: ['Content-Type','authtoken']
+app.use(cors({
+  origin: `http://localhost:5173/`, // Specifies the allowed origin (frontend app).
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods.
 }));
+
   app.get('/',async(req,res)=>{
     res.send('Food Delivery App is Working!');
   })
