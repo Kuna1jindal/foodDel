@@ -6,7 +6,7 @@ const ItemList = ({ item, showAlert, setItems, items,setPrice,price }) => {
 const {count,setCount}=useContext(CartContext);
   const handleDel = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/services/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/services/deleteone/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

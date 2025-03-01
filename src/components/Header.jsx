@@ -5,7 +5,9 @@ import { useState, useContext } from "react";
 import { CartContext } from "../utils/cartLength";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { FaHome, FaShoppingCart, FaUser } from 'react-icons/fa';
+import { FaHome, FaShoppingCart } from 'react-icons/fa';
+import logout from '../assets/logout.png'
+import login from '../assets/login.png'
 
 const Header = ({ showAlert }) => {
   const cartcontext = useContext(CartContext);
@@ -104,17 +106,17 @@ const Header = ({ showAlert }) => {
                     showAlert("Please login to access the cart", "warning");
                   }}
                 >
-                  <FaShoppingCart className="me-10" size={40} />
+                  <FaShoppingCart className="me-4" size={40} style={{position:"relative",top:"3px"}} />
                   
-                  <span className="position-absolute top-2 end-7 translate-middle badge rounded-pill bg-warning">
+                  <span className="position-absolute top-3 end-6 translate-middle badge rounded-pill bg-warning">
                     {cartcontext.count}
                   </span>
                 </button>
               ) : (
                 <Link to="/cart">
-                  <FaShoppingCart className="me-10" size={40} />
+                  <FaShoppingCart className="me-4" size={40} style={{position:"relative",top:"3px"}} />
                  
-                  <span className="position-absolute top-2 end-7 translate-middle badge rounded-pill bg-warning">
+                  <span className="position-absolute top-3 end-6 translate-middle badge rounded-pill bg-warning">
                     {cartcontext.count}
                   </span>
                 </Link>
@@ -136,8 +138,8 @@ const Header = ({ showAlert }) => {
                       fontWeight: "bold",
                     }}
                   >
-                     <FaUser className="me-4 mt-2" size={35} />
-                    Login
+                    <img src={login} alt="login" className="mt-2 h-10" title="login" />
+                
                   </div>
 
                   {/* Login Modal */}
@@ -151,7 +153,7 @@ const Header = ({ showAlert }) => {
                     <div className="modal-dialog">
                       <div className="modal-content">
                         <div className="modal-header">
-                          <h1 className="modal-title fs-5" id="loginModalLabel">
+                          <h1 className="modal-title fs-5 " id="loginModalLabel">
                             Login
                           </h1>
                           <button
@@ -233,8 +235,8 @@ const Header = ({ showAlert }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  <FaUser className="me-4 mt-2" size={35}></FaUser>
-                  Logout
+                  
+         <img src={logout} className="mt-2"title="logout" alt="logout image" />
                 </div>
               )}
             </li>

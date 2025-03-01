@@ -41,19 +41,23 @@ const Cart = ({ showAlert }) => {
   }, []); 
 
   const handleClearCart = async () => {
-    setCart([]);
-    counterState.setCount(0);
     const response = await fetch(`http://localhost:5000/api/services/deleteall`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "authtoken": `${localStorage.getItem("authtoken")}`,
+        "authtoken": localStorage.getItem("authtoken"),
       },
     });
     if (response.ok) {
+      setCart([]);
+      counterState.setCount(0);
       const token = await response.json();
       console.log(token.message);
       showAlert(token.message, "success");
+    }else{
+      const msg= await response.json();
+      console.error(msg);
+      showAlert(msg.error,'warning');
     }
   };
 

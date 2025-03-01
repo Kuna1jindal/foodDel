@@ -14,9 +14,8 @@ const cartitem=new Cart({
     resId:req.body.resId,
 });
 cartitem.save()
-.then((data)=>{
+.then(()=>{
     res.status(200).json({message:"Item added in cart"});
-    console.log(data);
 })
 .catch((error)=>{
     res.status(401).json({error:error})
@@ -32,7 +31,7 @@ router.get('/showcart',fetchuser,async(req,res)=>{
     })
 
 });
-router.delete('/:id', async (req, res) => {
+router.delete('/deleteone/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const itemData=await Cart.findOne({_id:id});
@@ -49,19 +48,28 @@ router.delete('/:id', async (req, res) => {
     }
   });
   
-router.delete('/deleteall', fetchuser, async (req, res) => {
+  router.delete('/deleteall', fetchuser, async (req, res) => {
     try {
-      // Attempt to delete all cart items for the user
-      await Cart.deleteMany({ custId: req.user.id });
+      // Validate user ID is present
+      if (!req.user?.id) {
+        return res.status(400).json({ error: "User ID is missing" });
+      }
   
-      // Send success response
-      res.status(200).json({ message: "Cart has been cleared successfully" });
+      // Attempt to delete all cart items for the user
+      const result = await Cart.deleteMany({custId: req.user.id });
+  
+      // Send success response with count of deleted items
+      res.status(200).json({
+        message: `${result.deletedCount} items removed from the cart successfully`,
+      });
     } catch (error) {
       // Log the error for debugging
       console.error("Error clearing cart:", error);
   
       // Send error response
-      res.status(402).json({ error: "An error occurred while clearing the cart" });
+      res.status(500).json({
+        error: "An error occurred while clearing the cart. Please try again.",
+      });
     }
   });
   

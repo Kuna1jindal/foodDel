@@ -8,14 +8,15 @@ const phone_pe_Host_url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1
 const router = express.Router();
 const salt_key = "96434309-7796-489d-8924-ab56988a6076";
 const merchant_id = "PGTESTPAYUAT86";
-
+let usertoken;
 router.get('/test', async (req, res) => {
   res.redirect('http://localhost:5173/confirm');
 });
 
 router.post('/order', async (req, res) => {
   
-    const { name, amount, mobile, MUId, transactionId } = req.body;
+    const { name, amount, mobile, MUId, transactionId,authtoken} = req.body;
+    usertoken=authtoken;
     const data = {
       merchantId: merchant_id,
       merchantTransactionId: transactionId,
@@ -75,9 +76,16 @@ router.post("/status", async (req, res) => {
         },
       }
     )
-    .then(response=>{
+    .then(async(response)=>{
       console.log(response);
       if(response.data.success){
+         await fetch(`http://localhost:5000/api/services/deleteall`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "authtoken": usertoken,
+          },
+        });
         res.redirect('http://localhost:5173/confirm');
       }else{
         res.redirect('http://localhost:5173/error');

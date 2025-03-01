@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { CartContext } from "../utils/cartLength";
 const Checkout = () => {
+  const {setCount}=useContext(CartContext);
   const [payment, setPayment] = useState("");
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
   const [order, setOrderData] = useState([]);
   const [amount, setTotalPrice] = useState(0);
   const [error, setError] = useState(null);
+  
   const navigate = useNavigate();
 
   const handlePaymentChange = (e) => {
@@ -73,7 +75,21 @@ const Checkout = () => {
 
   const handlePayment = async () => {
     if (payment !== "UPI") {
-      navigate("/confirm");
+       await fetch(`http://localhost:5000/api/services/deleteall`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "authtoken": `${localStorage.getItem("authtoken")}`,
+        },
+      })
+      .then(response=>{
+        if(response.ok){
+          setCount(0);
+          navigate("/confirm");
+        }
+      }).catch(error=>{
+        console.error(error);
+      })
       return;
     }
 
@@ -93,6 +109,7 @@ const Checkout = () => {
           amount: amount,
           MUId: `MES`+Date.now(),
           transactionId: "TES" +Date.now(),
+          authtoken:`${localStorage.getItem('authtoken')}`
         }),
       });
 
