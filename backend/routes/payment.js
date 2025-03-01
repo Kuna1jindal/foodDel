@@ -2,12 +2,12 @@ import express from 'express';
 import { Buffer } from 'buffer';
 import crypto from 'crypto';
 import axios from 'axios';
-
+import env from '../process.env.js';
 
 const phone_pe_Host_url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
 const router = express.Router();
-const salt_key = "96434309-7796-489d-8924-ab56988a6076";
-const merchant_id = "PGTESTPAYUAT86";
+const salt_key = env.SALT_KEY;
+const merchant_id = env.MERCHANT_KEY;
 let usertoken;
 router.get('/test', async (req, res) => {
   res.redirect('http://localhost:5173/confirm');
