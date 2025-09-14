@@ -44,7 +44,7 @@ router.post("/signup", async (req, res) => {
     }
   } catch (error) {
     console.error("Error during signup:", error);
-    res.status(500).json({ error: "An error occurred while processing your request." });
+    res.status(500).json({ error: "An internal error occurred while processing your request." });
   }
 });
 
